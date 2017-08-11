@@ -1,11 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import CheckboxForm from './CheckboxForm'
+
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Symptoms:</Text>
+        <Text>Unjani</Text>
+        <CheckboxForm/>
       </View>
     );
   }
@@ -14,8 +17,6 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff'
   },
 });
