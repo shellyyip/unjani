@@ -18,7 +18,7 @@ const DEFAULT_SYMPTOMS = [
 
 export default class CheckboxForm extends React.Component {
   handlePress ()  {
-    let allSymptomIndexes = this.form.getData().firstSection;
+    let allSymptomIndexes = this.form.getData().symptomsSection;
     let allSymptomIndexKeys = Object.keys(allSymptomIndexes);
     let selectedIndexes = allSymptomIndexKeys.filter(key => allSymptomIndexes[key] == true);
     let selectedIDs = DEFAULT_SYMPTOMS.filter((obj, index) => 
@@ -40,7 +40,7 @@ export default class CheckboxForm extends React.Component {
         onPress={this.handlePress.bind(this)}
       >
         <Section
-          ref={'firstSection'}
+          ref={'symptomsSection'}
           title={'SYMPTOMS'}
         >
           {DEFAULT_SYMPTOMS.map(this.renderSwitchCell)}
