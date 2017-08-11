@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { Form, SwitchCell, ButtonCell } from 'react-native-forms';
+import { Form, Section, SwitchCell, ButtonCell } from 'react-native-forms';
 
 const DEFAULT_SYMPTOMS = [ 
   {ID:10,Name:"Abdominal pain"}, 
@@ -18,7 +18,13 @@ const DEFAULT_SYMPTOMS = [
 
 export default class CheckboxForm extends React.Component {
   handlePress ()  {
-    console.log(this.form.getData());
+    let allSymptomIndexes = this.form.getData().firstSection;
+    let allSymptomIndexKeys = Object.keys(allSymptomIndexes);
+    let selectedIndexes = allSymptomIndexKeys.filter(key => allSymptomIndexes[key] == true);
+    let selectedIDs = DEFAULT_SYMPTOMS.filter((obj, index) => 
+      selectedIndexes.includes(index.toString())
+    );
+    console.log(selectedIDs.map((obj) => obj.ID ));
   }
   
   renderSwitchCell = (symptomObj, i) => {
