@@ -1,17 +1,31 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { createStore } from 'redux'
+import { reducer, actionTypes } from './unjaniRedux'
+
 import PersonalDataForm from './PersonalDataForm'
 import CheckboxForm from './CheckboxForm'
 
 export default class App extends React.Component {
-  state = {
-    gender: undefined, 
-    birthYear: undefined
-  }  
+  const store = createStore(reducer)
+ 
+  state = {}  
+
+  componentWillMount() {
+    this.setState(store.getState())
+
+    this.unsubscribe = store.subscribe(() => {
+      this.setState(store.getState())
+    })
+  }
+ 
+  componentWillUnmount() {
+    this.unsubscribe()
+  }
 
   onPersonalDataChange = (gender, birthYear) => {
-    this.setState({gender: gender, birthYear: birthYear})
+    store.dispatch(type: actionTypes.PERSONAL_DATA_CHANGE, payload: {gender: gender, birthYear: birthYear}) 
   }
 
   onSymptomsChange = (newSymptoms) => {
