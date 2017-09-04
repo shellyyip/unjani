@@ -1,23 +1,36 @@
 import React from 'react'
-import { Form, Section, ButtonCell, ActionSheetCell, TextInputCell } from 'react-native-forms';
+import { Form, Section, ButtonCell, ActionSheetCell, TextInputCell, createValidator } from 'react-native-forms';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { birthYearValidator } from './validators';
+import FormErrors from './FormErrors'
+import { View } from 'react-native';
 
 export default class PersonalDataForm extends React.Component {
+  state = {
+    errors: []
+  }
+
   onFormSubmit = (ref) => {
-    if (ref === 'submitButton') {
-      let section = this.form.getData().personalDataSection
-      let gender = section.genderInput
-      let birthYear = section.birthYearInput
-      const {onFormSubmit} = this.props
-      onFormSubmit(gender, birthYear) 
+    let errorsArray = Object.values(this.form.getValidationErrors().personalDataSection) 
+    if (errorsArray.length == 0) {
+      if (ref === 'submitButton') {
+        let section = this.form.getData().personalDataSection
+        let gender = section.genderInput
+        let birthYear = section.birthYearInput
+        const {onFormSubmit} = this.props
+        onFormSubmit(gender, birthYear) 
+      }
+    } else {
+      this.setState({errors: errorsArray})
     }
-   }
+  }
 
   renderBirthYearInput = () => {
     return (
       <TextInputCell
         ref="birthYearInput"
         inputProps={{ placeholder: 'Birth Year' }}
+        validator={createValidator(birthYearValidator, { errorMessage: 'Invalid Birth Year' })}
       />
     )
   }
@@ -37,24 +50,25 @@ export default class PersonalDataForm extends React.Component {
 
   render () {
     return (
-      <Form
-        ref={(ref) => { this.form = ref; }}
-        onPress={this.onFormSubmit.bind(this)}
-      >
-        <Section
-          ref={'personalDataSection'}
+        <Form
+          ref={(ref) => { this.form = ref; }}
+          onPress={this.onFormSubmit.bind(this)}
         >
-          {this.renderBirthYearInput()}
-          {this.renderGenderInput()}
-          
-          <ButtonCell
-            ref={'submitButton'}
-            title={'Submit'}
-            textAlign={'center'}
-            titleColor={'blue'}
-          />
-        </Section>
-      </Form>
+          <FormErrors errorsArray={this.state.errors} />
+          <Section
+            ref={'personalDataSection'}
+          >
+            {this.renderBirthYearInput()}
+            {this.renderGenderInput()}
+            
+            <ButtonCell
+              ref={'submitButton'}
+              title={'Submit'}
+              textAlign={'center'}
+              titleColor={'blue'}
+            />
+          </Section>
+        </Form>
      )
   }
 }
