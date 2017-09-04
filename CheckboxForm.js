@@ -21,10 +21,11 @@ export default class CheckboxForm extends React.Component {
     let allSymptomIndexes = this.form.getData().symptomsSection;
     let allSymptomIndexKeys = Object.keys(allSymptomIndexes);
     let selectedIndexes = allSymptomIndexKeys.filter(key => allSymptomIndexes[key] == true);
-    let selectedIDs = DEFAULT_SYMPTOMS.filter((obj, index) => 
+    let selected = DEFAULT_SYMPTOMS.filter((obj, index) => 
       selectedIndexes.includes(index.toString())
     );
-    console.log(selectedIDs.map((obj) => obj.ID ));
+    let selectedIDs = selected.map((obj) => obj.ID );
+    console.log(selectedIDs);
   }
   
   renderSwitchCell = (symptomObj, i) => {
