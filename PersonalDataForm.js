@@ -3,11 +3,21 @@ import { Form, Section, ButtonCell, ActionSheetCell, TextInputCell } from 'react
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class PersonalDataForm extends React.Component {
+  onFormSubmit = (ref) => {
+    if (ref === 'submitButton') {
+      let section = this.form.getData().personalDataSection
+      let gender = section.genderInput
+      let birthYear = section.birthYearInput
+      const {onFormSubmit} = this.props
+      onFormSubmit(gender, birthYear) 
+    }
+   }
+
   renderBirthYearInput = () => {
     return (
       <TextInputCell
-        ref="BirthYearInput"
-        inputProps={{ value: '1989', title: 'Birth Year' }}
+        ref="birthYearInput"
+        inputProps={{ placeholder: 'Birth Year' }}
       />
     )
   }
@@ -16,7 +26,7 @@ export default class PersonalDataForm extends React.Component {
     const alertIcon = <Icon name={'ios-alert'} color={'gray'} size={20} />;
     return (
       <ActionSheetCell
-        ref={'GenderInput'}
+        ref={'genderInput'}
         title={'Gender'}
         options={['male', 'female']}
         icon={alertIcon}
@@ -25,10 +35,11 @@ export default class PersonalDataForm extends React.Component {
     )
   }
 
-   render () {
+  render () {
     return (
       <Form
         ref={(ref) => { this.form = ref; }}
+        onPress={this.onFormSubmit.bind(this)}
       >
         <Section
           ref={'personalDataSection'}
@@ -37,6 +48,7 @@ export default class PersonalDataForm extends React.Component {
           {this.renderGenderInput()}
           
           <ButtonCell
+            ref={'submitButton'}
             title={'Submit'}
             textAlign={'center'}
             titleColor={'blue'}
