@@ -36,7 +36,8 @@ const DEFAULT_MEDICAL_INFO = {
 }
 
 export const actionTypes = {
-  PERSONAL_DATA_CHANGE: 'PERSONAL_DATA_CHANGE'
+  PERSONAL_DATA_CHANGE: 'PERSONAL_DATA_CHANGE',
+  OPTIONS_SUBMITTED: 'OPTIONS_SUBMITTED'
 }
 
 export const stages = {
@@ -53,13 +54,21 @@ const initialState = {
 
 export const reducer = (state = initialState, action) => {
   const {type, payload} = action
-  console.log("type is" + type)  
   switch (type) {
     case actionTypes.PERSONAL_DATA_CHANGE: {
       return {
+        ...state,
         gender: payload.gender, 
         birthYear: payload.birthYear,
         stage: stages.BODY_LOCATION
+      }
+    }
+    case actionTypes.OPTIONS_SUBMITTED: {
+      let medicalInfo = state.medicalInfo;
+      medicalInfo[state.stage].selected = payload.selected;
+      return {
+        ...state,
+        medicalInfo: medicalInfo
       }
     }
   }

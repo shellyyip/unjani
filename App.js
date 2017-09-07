@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { store, actionTypes, stages } from './unjaniRedux'
 
+import Requester from './Requester'
 import PersonalDataForm from './PersonalDataForm'
 import CheckboxForm from './CheckboxForm'
 
@@ -42,6 +43,9 @@ export default class App extends React.Component {
   }
 
   onSelectOptions = (selectedIDs) => {
+    store.dispatch({type: actionTypes.OPTIONS_SUBMITTED, payload: {selected: selectedIDs}})
+    let requester = new Requester(this.state.gender, this.state.birthYear) 
+    console.log(requester.get())
   }
 
   render() {
