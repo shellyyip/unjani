@@ -4,15 +4,15 @@ import { Form, Section, SwitchCell, ButtonCell } from 'react-native-forms';
 
 export default class CheckboxForm extends React.Component {
   handlePress ()  {
-    const {allOptions} = this.props
-    let allSymptomIndexes = this.form.getData().symptomsSection;
-    let allSymptomIndexKeys = Object.keys(allSymptomIndexes);
-    let selectedIndexes = allSymptomIndexKeys.filter(key => allSymptomIndexes[key] == true);
+    const {allOptions, onFormSubmit} = this.props
+    let allIndexes = this.form.getData().optionsSection;
+    let allIndexKeys = Object.keys(allIndexes);
+    let selectedIndexes = allIndexKeys.filter(key => allIndexes[key] == true);
     let selected = allOptions.filter((obj, index) => 
       selectedIndexes.includes(index.toString())
     );
     let selectedIDs = selected.map((obj) => obj.ID );
-    console.log(selectedIDs);
+    onFormSubmit(selectedIDs);
   }
   
   renderSwitchCell = (symptomObj, i) => {
@@ -22,7 +22,7 @@ export default class CheckboxForm extends React.Component {
   }
 
   render () {
-    const {allOptions} = this.props
+    const {allOptions, prompt} = this.props
   
     return (
       <Form
@@ -30,8 +30,8 @@ export default class CheckboxForm extends React.Component {
         onPress={this.handlePress.bind(this)}
       >
         <Section
-          ref={'symptomsSection'}
-          title={'SYMPTOMS'}
+          ref={'optionsSection'}
+          title={prompt}
         >
           {allOptions.map(this.renderSwitchCell)}
           

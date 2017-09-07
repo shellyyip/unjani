@@ -7,6 +7,10 @@ import PersonalDataForm from './PersonalDataForm'
 import CheckboxForm from './CheckboxForm'
 
 export default class App extends React.Component {
+  PROMPTS = {
+    BODY_LOCATION: 'Which part of your body hurts?'
+  }  
+
   state = {}  
 
   componentWillMount() {
@@ -21,11 +25,14 @@ export default class App extends React.Component {
     this.unsubscribe()
   }
 
-  getCheckboxFormOptions() {
+  getCheckboxFormPrompt() {
     const {stage} = this.state
 
-    console.log(stage)
-    console.log(this.state.medicalInfo)
+    return (this.PROMPTS[stage])
+  }
+
+  getCheckboxFormOptions() {
+    const {stage} = this.state
     
     return (this.state.medicalInfo[stage].potential)
   }
@@ -34,8 +41,7 @@ export default class App extends React.Component {
     store.dispatch({type: actionTypes.PERSONAL_DATA_CHANGE, payload: {gender: gender, birthYear: birthYear}}) 
   }
 
-  onSymptomsChange = (newSymptoms) => {
-    
+  onSelectOptions = (selectedIDs) => {
   }
 
   render() {
@@ -49,7 +55,7 @@ export default class App extends React.Component {
           onFormSubmit={this.onPersonalDataChange}
         />
     } else {
-      formToRender = <CheckboxForm onFormSubmit={this.onSymptomsChange} allOptions={this.getCheckboxFormOptions()} />;
+      formToRender = <CheckboxForm onFormSubmit={this.onSelectOptions} prompt={this.getCheckboxFormPrompt()} allOptions={this.getCheckboxFormOptions()} />;
       personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
     }    
 
