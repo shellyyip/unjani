@@ -2,26 +2,13 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { Form, Section, SwitchCell, ButtonCell } from 'react-native-forms';
 
-const DEFAULT_SYMPTOMS = [ 
-  {ID:10,Name:"Abdominal pain"}, 
-  {ID:238,Name:"Anxiety"}, 
-  {ID:104,Name:"Back pain"}, 
-  {ID:75,Name:"Burning eyes"}, 
-  {ID:46,Name:"Burning in the throat"}, 
-  {ID:170,Name:"Cheek swelling"}, 
-  {ID:17,Name:"Chest pain"}, 
-  {ID:31,Name:"Chest tightness"}, 
-  {ID:175,Name:"Chills"}, 
-  {ID:139,Name:"Cold sweats"}, 
-  {ID:15,Name:"Cough"} 
-]  
-
 export default class CheckboxForm extends React.Component {
   handlePress ()  {
+    const {allOptions} = this.props
     let allSymptomIndexes = this.form.getData().symptomsSection;
     let allSymptomIndexKeys = Object.keys(allSymptomIndexes);
     let selectedIndexes = allSymptomIndexKeys.filter(key => allSymptomIndexes[key] == true);
-    let selected = DEFAULT_SYMPTOMS.filter((obj, index) => 
+    let selected = allOptions.filter((obj, index) => 
       selectedIndexes.includes(index.toString())
     );
     let selectedIDs = selected.map((obj) => obj.ID );
@@ -35,6 +22,8 @@ export default class CheckboxForm extends React.Component {
   }
 
   render () {
+    const {allOptions} = this.props
+  
     return (
       <Form
         ref={(ref) => { this.form = ref; }}
@@ -44,7 +33,7 @@ export default class CheckboxForm extends React.Component {
           ref={'symptomsSection'}
           title={'SYMPTOMS'}
         >
-          {DEFAULT_SYMPTOMS.map(this.renderSwitchCell)}
+          {allOptions.map(this.renderSwitchCell)}
           
           <ButtonCell
             title={'Submit'}

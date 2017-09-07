@@ -1,15 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { createStore } from 'redux'
-import { reducer, actionTypes } from './unjaniRedux'
+import { store, actionTypes, stages } from './unjaniRedux'
 
 import PersonalDataForm from './PersonalDataForm'
 import CheckboxForm from './CheckboxForm'
 
 export default class App extends React.Component {
-  const store = createStore(reducer)
- 
   state = {}  
 
   componentWillMount() {
@@ -24,8 +21,17 @@ export default class App extends React.Component {
     this.unsubscribe()
   }
 
+  getCheckboxFormOptions() {
+    const {stage} = this.state
+
+    console.log(stage)
+    console.log(this.state.medicalInfo)
+    
+    return (this.state.medicalInfo[stage].potential)
+  }
+
   onPersonalDataChange = (gender, birthYear) => {
-    store.dispatch(type: actionTypes.PERSONAL_DATA_CHANGE, payload: {gender: gender, birthYear: birthYear}) 
+    store.dispatch({type: actionTypes.PERSONAL_DATA_CHANGE, payload: {gender: gender, birthYear: birthYear}}) 
   }
 
   onSymptomsChange = (newSymptoms) => {
@@ -33,16 +39,19 @@ export default class App extends React.Component {
   }
 
   render() {
-    let formToRender = <CheckboxForm onFormSubmit={this.onSymptomsChange} />;
-    let personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text> 
+    let formToRender;
+    let personalDataComponent; 
 
-    if (this.state.gender == undefined || this.state.birthYear == undefined) {
+    if (this.state.stage == stages.PERSONAL_DATA) {
       personalDataComponent = undefined;
       formToRender = 
         <PersonalDataForm
           onFormSubmit={this.onPersonalDataChange}
         />
-    };    
+    } else {
+      formToRender = <CheckboxForm onFormSubmit={this.onSymptomsChange} allOptions={this.getCheckboxFormOptions()} />;
+      personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
+    }    
 
     return (    
       <View style={styles.container}>
