@@ -37,13 +37,17 @@ const DEFAULT_MEDICAL_INFO = {
 
 export const actionTypes = {
   PERSONAL_DATA_CHANGE: 'PERSONAL_DATA_CHANGE',
-  OPTIONS_SUBMITTED: 'OPTIONS_SUBMITTED'
+  OPTIONS_SUBMITTED: 'OPTIONS_SUBMITTED',
+  REQUEST_COMPLETED: 'REQUEST_COMPLETED'
 }
 
 export const stages = {
   PERSONAL_DATA: 'PERSONAL_DATA',
-  BODY_LOCATION: 'BODY_LOCATION'
+  BODY_LOCATION: 'BODY_LOCATION',
+  BODY_SUBLOCATION: 'BODY_SUBLOCATION'
 }
+
+const stagesKeys = ['PERSONAL_DATA', 'BODY_LOCATION', 'BODY_SUBLOCATION']
 
 const initialState = {
   gender: undefined,
@@ -64,10 +68,21 @@ export const reducer = (state = initialState, action) => {
       }
     }
     case actionTypes.OPTIONS_SUBMITTED: {
-      let medicalInfo = state.medicalInfo;
+      const medicalInfo = state.medicalInfo;
       medicalInfo[state.stage].selected = payload.selected;
       return {
         ...state,
+        medicalInfo: medicalInfo
+      }
+    }
+    case actionTypes.REQUEST_COMPLETED: {
+      const medicalInfo = state.medicalInfo;
+      const nextStageIndex = (stagesKeys.indexOf(state.stage) + 1)
+      const nextStage = stagesKeys[nextStageIndex]
+      medicalInfo[nextStage] = { potential: payload.potential, selected: [] }
+      return {
+        ...state,
+        stage: nextStage, 
         medicalInfo: medicalInfo
       }
     }

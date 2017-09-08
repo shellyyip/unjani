@@ -9,7 +9,8 @@ import CheckboxForm from './CheckboxForm'
 
 export default class App extends React.Component {
   PROMPTS = {
-    BODY_LOCATION: 'Which part of your body hurts?'
+    BODY_LOCATION: 'Which part of your body hurts?',
+    BODY_SUBLOCATION: 'Specifially, which of these body parts hurts?'
   }  
 
   state = {}  
@@ -34,7 +35,8 @@ export default class App extends React.Component {
 
   getCheckboxFormOptions() {
     const {stage} = this.state
-    
+   
+    console.log(this.state.medicalInfo[stage])
     return (this.state.medicalInfo[stage].potential)
   }
 
@@ -45,7 +47,7 @@ export default class App extends React.Component {
   onSelectOptions = (selectedIDs) => {
     store.dispatch({type: actionTypes.OPTIONS_SUBMITTED, payload: {selected: selectedIDs}})
     let requester = new Requester(this.state.gender, this.state.birthYear) 
-    console.log(requester.get())
+    requester.get()
   }
 
   render() {
