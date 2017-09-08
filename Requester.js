@@ -1,4 +1,5 @@
 import { store, actionTypes, stages } from './unjaniRedux'
+import moment from 'moment'
 
 export default class Requester {
   BASE_URL = "https://sandbox-healthservice.priaid.ch/"
@@ -14,13 +15,39 @@ export default class Requester {
 
     switch (stage) {
       case stages.BODY_LOCATION: {
-        const locationID = medicalInfo[stages.BODY_LOCATION].selected[0]
+        const locationID = this.getLocationID(stages.BODY_LOCATION, medicalInfo)
         const fullURL = this.BASE_URL + "body/locations/" + locationID + this.DEFAULT_QUERY_PARAMS
+        return (this.makeRequest(fullURL))
+      }
+      case stages.BODY_SUBLOCATION: {
+        const locationID = this.getLocationID(stages.BODY_SUBLOCATION, medicalInfo)
+        const selectorStatus = this.getSelectorStatus()
+        const fullURL = this.BASE_URL + "symptoms/" + locationID + "/" + selectorStatus + this.DEFAULT_QUERY_PARAMS
+        console.log(fullURL)
         return (this.makeRequest(fullURL))
       }
     }
 
     return "something happened"
+  }
+
+  getLocationID(stage, medicalInfo) {
+    return medicalInfo[stage].selected[0]
+  }
+
+  getSelectorStatus() {
+    let thisYear = moment().year();
+    let elevenYearsAgo = thisYear - 11;
+    let isOverEleven = (this.birthYear < elevenYearsAgo)
+    
+    switch (this.gender) {
+      case "female": {
+        return (isOverEleven ? 'woman' : 'girl')
+      }
+      case "male": {
+        return (isOverEleven ? 'man' : 'boy')
+      }
+    }
   }
 
   makeRequest(url) {
