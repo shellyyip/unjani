@@ -1,19 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
-import { store, actionTypes, stages } from './unjaniRedux'
+import { store, actionTypes, stages, prompts } from './unjaniRedux'
 
 import Requester from './Requester'
 import PersonalDataForm from './PersonalDataForm'
 import CheckboxForm from './CheckboxForm'
 
 export default class App extends React.Component {
-  PROMPTS = {
-    BODY_LOCATION: 'Which part of your body hurts?',
-    BODY_SUBLOCATION: 'Specifially, which of these body parts hurts?',
-    SUBLOCATION_SYMPTOMS: 'Which of these symptoms are you having?'
-  }  
-
   state = {}  
 
   componentWillMount() {
@@ -31,7 +25,7 @@ export default class App extends React.Component {
   getCheckboxFormPrompt() {
     const {stage} = this.state
 
-    return (this.PROMPTS[stage])
+    return (prompts[stage])
   }
 
   getCheckboxFormOptions() {

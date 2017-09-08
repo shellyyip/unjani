@@ -28,12 +28,26 @@ const POTENTIAL_BODY_LOCATIONS =
     }
   ]
 
+export const noneOption = {
+  "ID": 'noneOptionID',
+  "Name": "None"
+}
+
 const DEFAULT_MEDICAL_INFO = {
   BODY_LOCATION: {
     potential: POTENTIAL_BODY_LOCATIONS,
     selected: []
   }
 }
+
+export const prompts = {
+  BODY_LOCATION: 'Which part of your body hurts?',
+  BODY_SUBLOCATION: 'Specifially, which of these body parts hurts?',
+  SUBLOCATION_SYMPTOMS: 'Which of these symptoms are you having?',
+  ADDITIONAL_SYMPTOMS: 'Are you having any additional symptoms?',
+  DIAGNOSES: 'Here are your potential diagnoses'
+}
+
 
 export const actionTypes = {
   PERSONAL_DATA_CHANGE: 'PERSONAL_DATA_CHANGE',
@@ -45,10 +59,12 @@ export const stages = {
   PERSONAL_DATA: 'PERSONAL_DATA',
   BODY_LOCATION: 'BODY_LOCATION',
   BODY_SUBLOCATION: 'BODY_SUBLOCATION',
-  SUBLOCATION_SYMPTOMS: 'SUBLOCATION_SYMPTOMS'
+  SUBLOCATION_SYMPTOMS: 'SUBLOCATION_SYMPTOMS',
+  ADDITIONAL_SYMPTOMS: 'ADDITIONAL_SYMPTOMS',
+  DIAGNOSES: 'DIAGNOSES'
 }
 
-const stagesKeys = ['PERSONAL_DATA', 'BODY_LOCATION', 'BODY_SUBLOCATION', 'SUBLOCATION_SYMPTOMS']
+const stagesKeys = ['PERSONAL_DATA', 'BODY_LOCATION', 'BODY_SUBLOCATION', 'SUBLOCATION_SYMPTOMS', 'ADDITIONAL_SYMPTOMS', 'DIAGNOSES']
 
 const initialState = {
   gender: undefined,
@@ -82,7 +98,9 @@ export const reducer = (state = initialState, action) => {
       const medicalInfo = state.medicalInfo;
       const nextStageIndex = (stagesKeys.indexOf(state.stage) + 1)
       const nextStage = stagesKeys[nextStageIndex]
-      medicalInfo[nextStage] = { potential: payload.potential, selected: [] }
+      const potential = payload.potential
+      if (nextStage == stages.ADDITIONAL_SYMPTOMS) { potential.push(noneOption) }
+      medicalInfo[nextStage] = { potential: potential, selected: [] }
       return {
         ...state,
         isFetching: false,
