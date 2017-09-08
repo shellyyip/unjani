@@ -52,6 +52,7 @@ const stagesKeys = ['PERSONAL_DATA', 'BODY_LOCATION', 'BODY_SUBLOCATION']
 const initialState = {
   gender: undefined,
   birthYear: undefined,
+  isFetching: false,
   stage: stages.PERSONAL_DATA,
   medicalInfo: DEFAULT_MEDICAL_INFO
 }
@@ -72,6 +73,7 @@ export const reducer = (state = initialState, action) => {
       medicalInfo[state.stage].selected = payload.selected;
       return {
         ...state,
+        isFetching: true,
         medicalInfo: medicalInfo
       }
     }
@@ -82,6 +84,7 @@ export const reducer = (state = initialState, action) => {
       medicalInfo[nextStage] = { potential: payload.potential, selected: [] }
       return {
         ...state,
+        isFetching: false,
         stage: nextStage, 
         medicalInfo: medicalInfo
       }

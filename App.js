@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
 import { store, actionTypes, stages } from './unjaniRedux'
 
@@ -10,7 +10,8 @@ import CheckboxForm from './CheckboxForm'
 export default class App extends React.Component {
   PROMPTS = {
     BODY_LOCATION: 'Which part of your body hurts?',
-    BODY_SUBLOCATION: 'Specifially, which of these body parts hurts?'
+    BODY_SUBLOCATION: 'Specifially, which of these body parts hurts?',
+    SUBLOCATION_SYMPTOMS: 'Which of these symptoms are you having?'
   }  
 
   state = {}  
@@ -36,7 +37,6 @@ export default class App extends React.Component {
   getCheckboxFormOptions() {
     const {stage} = this.state
    
-    console.log(this.state.medicalInfo[stage])
     return (this.state.medicalInfo[stage].potential)
   }
 
@@ -55,11 +55,12 @@ export default class App extends React.Component {
     let personalDataComponent; 
 
     if (this.state.stage == stages.PERSONAL_DATA) {
-      personalDataComponent = undefined;
       formToRender = 
         <PersonalDataForm
           onFormSubmit={this.onPersonalDataChange}
         />
+    } else if (this.state.isFetching) {
+      formToRender = <ActivityIndicator animating={true} />
     } else {
       formToRender = <CheckboxForm onFormSubmit={this.onSelectOptions} prompt={this.getCheckboxFormPrompt()} allOptions={this.getCheckboxFormOptions()} />;
       personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
