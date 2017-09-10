@@ -6,6 +6,7 @@ import { store, actionTypes, stages, prompts } from './unjaniRedux'
 import Requester from './Requester'
 import PersonalDataForm from './PersonalDataForm'
 import CheckboxForm from './CheckboxForm'
+import List from './List'
 
 export default class App extends React.Component {
   state = {}  
@@ -22,7 +23,7 @@ export default class App extends React.Component {
     this.unsubscribe()
   }
 
-  getCheckboxFormPrompt() {
+  getPrompt() {
     const {stage} = this.state
 
     return (prompts[stage])
@@ -45,26 +46,31 @@ export default class App extends React.Component {
   }
 
   render() {
-    let formToRender;
+    let mainComponent;
     let personalDataComponent; 
 
     if (this.state.stage == stages.PERSONAL_DATA) {
-      formToRender = 
+      mainComponent = 
         <PersonalDataForm
           onFormSubmit={this.onPersonalDataChange}
         />
     } else if (this.state.isFetching) {
-      formToRender = <ActivityIndicator animating={true} />
+      mainComponent = <ActivityIndicator animating={true} />
     } else {
-      formToRender = <CheckboxForm onFormSubmit={this.onSelectOptions} prompt={this.getCheckboxFormPrompt()} allOptions={this.getCheckboxFormOptions()} />;
       personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
+      if (this.state.stage == stages.DIAGNOSES) {
+        mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
+      }
+      else {
+        mainComponent = <CheckboxForm onFormSubmit={this.onSelectOptions} prompt={this.getPrompt()} allOptions={this.getCheckboxFormOptions()} />;
+      }
     }    
 
     return (    
       <View style={styles.container}>
         <Text style={styles.title}>Unjani</Text>
         {personalDataComponent} 
-        {formToRender}
+        {mainComponent}
       </View>
     );
   }
