@@ -36,7 +36,7 @@ export default class PersonalDataForm extends React.Component {
   }
 
   renderGenderInput = () => {
-    const alertIcon = <Icon name={'ios-alert'} color={'gray'} size={20} />;
+    const alertIcon = <Icon name="ios-alert" ios="ios-alert" md="md-alert" color={'gray'} size={20} />;
     return (
       <ActionSheetCell
         ref={'genderInput'}

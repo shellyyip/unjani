@@ -7,6 +7,7 @@ import Requester from './Requester'
 import PersonalDataForm from './PersonalDataForm'
 import CheckboxForm from './CheckboxForm'
 import List from './List'
+import Breadcrumbs from './Breadcrumbs'
 
 export default class App extends React.Component {
   state = {}  
@@ -29,6 +30,12 @@ export default class App extends React.Component {
     return (stage === stages.BODY_LOCATION || stage === stages.BODY_SUBLOCATION)
   }
 
+  getExistingMedicalInfo() {
+    const {medicalInfo} = this.state;
+    const orderedKeys = stagesKeys.filter((n) => { return (Object.keys(medicalInfo).includes(n) && medicalInfo[n].selectedNames) })
+    return (orderedKeys.map((k) => {return ({identifier: k, item: medicalInfo[k].selectedNames.join(", ")})}))
+  }
+  
   getPrompt() {
     const {stage} = this.state
 
@@ -41,12 +48,8 @@ export default class App extends React.Component {
     return (this.state.medicalInfo[stage].potential)
   }
 
-  getEnteredMedicalInfo() {
-    const {medicalInfo} = this.state
-    const vals = Object.values(medicalInfo)
-    console.log(vals)
-    const selectedNamesArray = vals.map((o) => { return (o.selectedNames && o.selectedNames.join(", "))})
-    return (selectedNamesArray.filter(n => n).join(" -> "))
+  onBreadcrumbSelection = (stage) => {
+    store.dispatch({type: actionTypes.PREVIOUS_STAGE_SELECTED, payload: {prevStage: stage}})
   }
 
   onPersonalDataChange = (gender, birthYear) => {
@@ -73,7 +76,7 @@ export default class App extends React.Component {
       mainComponent = <ActivityIndicator animating={true} />
     } else {
       personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
-      medicalInfoComponent = <Text> {this.getEnteredMedicalInfo()}  </Text>
+      medicalInfoComponent = <Breadcrumbs itemObjs={this.getExistingMedicalInfo()} onItemSelection={this.onBreadcrumbSelection} />
       if (this.state.stage == stages.DIAGNOSES) {
         mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
       }

@@ -49,11 +49,11 @@ export const prompts = {
   DIAGNOSES: 'Here are your potential diagnoses, in order of most likely to least likely:'
 }
 
-
 export const actionTypes = {
   PERSONAL_DATA_CHANGE: 'PERSONAL_DATA_CHANGE',
   OPTIONS_SUBMITTED: 'OPTIONS_SUBMITTED',
-  REQUEST_COMPLETED: 'REQUEST_COMPLETED'
+  REQUEST_COMPLETED: 'REQUEST_COMPLETED',
+  PREVIOUS_STAGE_SELECTED: 'PREVIOUS_STAGE_SELECTED'
 }
 
 export const stages = {
@@ -108,6 +108,13 @@ export const reducer = (state = initialState, action) => {
         isFetching: false,
         stage: nextStage, 
         medicalInfo: medicalInfo
+      }
+    }
+    case actionTypes.PREVIOUS_STAGE_SELECTED: {
+      const {prevStage} = payload;
+      return {
+        ...state,
+        stage: prevStage
       }
     }
   }
