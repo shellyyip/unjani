@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
-import { store, actionTypes, stages, prompts } from './unjaniRedux'
+import { store, actionTypes, stages, stagesKeys, prompts } from './unjaniRedux'
 
 import Requester from './Requester'
 import PersonalDataForm from './PersonalDataForm'
@@ -41,6 +41,14 @@ export default class App extends React.Component {
     return (this.state.medicalInfo[stage].potential)
   }
 
+  getEnteredMedicalInfo() {
+    const {medicalInfo} = this.state
+    const vals = Object.values(medicalInfo)
+    console.log(vals)
+    const selectedNamesArray = vals.map((o) => { return (o.selectedNames && o.selectedNames.join(", "))})
+    return (selectedNamesArray.filter(n => n).join(" -> "))
+  }
+
   onPersonalDataChange = (gender, birthYear) => {
     store.dispatch({type: actionTypes.PERSONAL_DATA_CHANGE, payload: {gender: gender, birthYear: birthYear}}) 
   }
@@ -54,6 +62,7 @@ export default class App extends React.Component {
   render() {
     let mainComponent;
     let personalDataComponent; 
+    let medicalInfoComponent;
 
     if (this.state.stage == stages.PERSONAL_DATA) {
       mainComponent = 
@@ -64,8 +73,8 @@ export default class App extends React.Component {
       mainComponent = <ActivityIndicator animating={true} />
     } else {
       personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
+      medicalInfoComponent = <Text> {this.getEnteredMedicalInfo()}  </Text>
       if (this.state.stage == stages.DIAGNOSES) {
-        console.log(this.state.medicalInfo)
         mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
       }
       else {
@@ -77,6 +86,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <Text style={styles.title}>Unjani</Text>
         {personalDataComponent} 
+        {medicalInfoComponent}
         {mainComponent}
       </View>
     );

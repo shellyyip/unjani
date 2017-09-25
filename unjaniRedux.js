@@ -36,7 +36,8 @@ export const noneOption = {
 const DEFAULT_MEDICAL_INFO = {
   BODY_LOCATION: {
     potential: POTENTIAL_BODY_LOCATIONS,
-    selected: []
+    selected: [],
+    selectedNames: []
   }
 }
 
@@ -64,7 +65,7 @@ export const stages = {
   DIAGNOSES: 'DIAGNOSES'
 }
 
-const stagesKeys = ['PERSONAL_DATA', 'BODY_LOCATION', 'BODY_SUBLOCATION', 'SUBLOCATION_SYMPTOMS', 'ADDITIONAL_SYMPTOMS', 'DIAGNOSES']
+export const stagesKeys = ['PERSONAL_DATA', 'BODY_LOCATION', 'BODY_SUBLOCATION', 'SUBLOCATION_SYMPTOMS', 'ADDITIONAL_SYMPTOMS', 'DIAGNOSES']
 
 const initialState = {
   gender: undefined,
@@ -88,6 +89,7 @@ export const reducer = (state = initialState, action) => {
     case actionTypes.OPTIONS_SUBMITTED: {
       const medicalInfo = state.medicalInfo;
       medicalInfo[state.stage].selected = payload.selected;
+      medicalInfo[state.stage].selectedNames = medicalInfo[state.stage].potential.filter((o) => { return payload.selected.includes(o.ID) }).map((o) => { return o.Name })
       return {
         ...state,
         isFetching: true,
