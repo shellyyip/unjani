@@ -22,6 +22,12 @@ export default class App extends React.Component {
   componentWillUnmount() {
     this.unsubscribe()
   }
+  
+  checkValidateOneOption() {
+    const {stage} = this.state
+
+    return (stage === stages.BODY_LOCATION || stage === stages.BODY_SUBLOCATION)
+  }
 
   getPrompt() {
     const {stage} = this.state
@@ -59,10 +65,11 @@ export default class App extends React.Component {
     } else {
       personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
       if (this.state.stage == stages.DIAGNOSES) {
+        console.log(this.state.medicalInfo)
         mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
       }
       else {
-        mainComponent = <CheckboxForm onFormSubmit={this.onSelectOptions} prompt={this.getPrompt()} allOptions={this.getCheckboxFormOptions()} />;
+        mainComponent = <CheckboxForm onFormSubmit={this.onSelectOptions} validateOneOption={this.checkValidateOneOption()}  prompt={this.getPrompt()} allOptions={this.getCheckboxFormOptions()} />;
       }
     }    
 
