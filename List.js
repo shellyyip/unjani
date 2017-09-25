@@ -13,8 +13,6 @@ export default class List extends React.Component {
   extractKey = ({ID}) => ID
 
   renderItem = ({item}) => {
-    console.log("ITEM:")
-    console.log(item)
     return (
       <Text style={styles.row}>
         {item.Name}: {item.Accuracy}% Chance
@@ -23,7 +21,6 @@ export default class List extends React.Component {
   }
 
   render() {
-    console.log("IN FLATLIST") 
     return (
       <View>
         <Text> {this.props.prompt} </Text>

@@ -27,9 +27,6 @@ export default class CheckboxForm extends React.Component {
   }
 
   render () {
-    console.log('in checkbox form render')
-    console.log(this.props)
-
     const {allOptions, prompt} = this.props
   
     return (
