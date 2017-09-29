@@ -81,7 +81,9 @@ export default class App extends React.Component {
         mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
       }
       else {
-        mainComponent = <CheckboxForm onFormSubmit={this.onSelectOptions} validateOneOption={this.checkValidateOneOption()}  prompt={this.getPrompt()} allOptions={this.getCheckboxFormOptions()} />;
+        console.log("IN APP.JS RENDER")
+        console.log("passing checkbox form the following options: " + this.getCheckboxFormOptions())
+         mainComponent = <CheckboxForm onFormSubmit={this.onSelectOptions} validateOneOption={this.checkValidateOneOption()}  prompt={this.getPrompt()} allOptions={this.getCheckboxFormOptions()} />;
       }
     }    
 

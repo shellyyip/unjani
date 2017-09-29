@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { Form, Section, SwitchCell, ButtonCell } from 'react-native-forms';
 import FormErrors from './FormErrors'
 
@@ -8,9 +8,10 @@ export default class CheckboxForm extends React.Component {
     errors: []
   }
 
-  handlePress ()  {
+  handlePress = () =>  {
     const {allOptions, onFormSubmit, validateOneOption} = this.props
-    let allIndexes = this.form.getData().optionsSection;
+    let sectionRef = Object.keys(this.form.getData())[0]
+    let allIndexes = this.form.getData()[sectionRef];
     let allIndexKeys = Object.keys(allIndexes);
     let selectedIndexes = allIndexKeys.filter(key => allIndexes[key] == true);
     let selected = allOptions.filter((obj, index) => 
@@ -30,13 +31,13 @@ export default class CheckboxForm extends React.Component {
     const {allOptions, prompt} = this.props
   
     return (
-      <Form
+       <Form
         ref={(ref) => { this.form = ref; }}
-        onPress={this.handlePress.bind(this)}
+        onPress={this.handlePress}
       >
         <FormErrors errorsArray={this.state.errors} />
         <Section
-          ref={'optionsSection'}
+          ref={prompt}
           title={prompt}
         >
           {allOptions.map(this.renderSwitchCell)}
@@ -51,3 +52,8 @@ export default class CheckboxForm extends React.Component {
      )
   }
 }
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1
+    }
+  });

@@ -1,17 +1,17 @@
 import React from 'react'
-import { Text, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 
 export default class Breadcrumb extends React.Component {
-  handleSelection() {
+  handleSelection = () => {
     const {onSelection, identifier} = this.props
-    onselection(identifier)
+    onSelection(identifier)
   }
 
   render() {
-    const {item} = this.props
-
     return (
-      <Text onClick={this.handleSelection}> {item} </Text>
+      <TouchableOpacity onPress={this.handleSelection}>
+        <Text>{this.props.item}</Text>  
+      </TouchableOpacity>
     )
   }
 }

@@ -112,14 +112,23 @@ export const reducer = (state = initialState, action) => {
     }
     case actionTypes.PREVIOUS_STAGE_SELECTED: {
       const {prevStage} = payload;
+      const lastIndex = stagesKeys.indexOf(prevStage) + 1
+      const medicalInfoKeys = stagesKeys.slice(1, lastIndex)
+      const medicalInfo = Object.assign({}, state.medicalInfo) 
+      for (const k of Object.keys(medicalInfo)) { 
+        if (!medicalInfoKeys.includes(k)) {
+          delete medicalInfo[k]
+        }
+      }
       return {
         ...state,
-        stage: prevStage
+        stage: prevStage,
+        medicalInfo: medicalInfo
       }
     }
   }
 
   return state
 }
-
 export const store = createStore(reducer)
+
