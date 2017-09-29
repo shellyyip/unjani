@@ -9,15 +9,18 @@ export default class CheckboxForm extends React.Component {
   }
 
   handlePress = () =>  {
-    const {allOptions, onFormSubmit, validateOneOption} = this.props
-    let sectionRef = Object.keys(this.form.getData())[0]
-    let allIndexes = this.form.getData()[sectionRef];
+    const {allOptions, onFormSubmit, validateOneOption, prompt} = this.props
+    console.log(prompt)
+    let allIndexes = this.form.getData()[prompt];
+    console.log(Object.keys(this.form.getData()))
+    console.log(Object.values(this.form.getData()))
     let allIndexKeys = Object.keys(allIndexes);
     let selectedIndexes = allIndexKeys.filter(key => allIndexes[key] == true);
     let selected = allOptions.filter((obj, index) => 
       selectedIndexes.includes(index.toString())
     );
     let selectedIDs = selected.map((obj) => obj.ID );
+    console.log("in handle press. selected IDs: " + selectedIDs);
     (validateOneOption && selectedIDs.length > 1) ? this.setState({errors: ["Please select only one location"]})  : onFormSubmit(selectedIDs);
   }
   
