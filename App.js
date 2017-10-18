@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { store, actionTypes, stages, stagesKeys, prompts } from './unjaniRedux'
 
 import Requester from './Requester'
+import Authenticator from './Authenticator'
 import PersonalDataForm from './PersonalDataForm'
 import CheckboxForm from './CheckboxForm'
 import List from './List'
@@ -66,6 +67,9 @@ export default class App extends React.Component {
     let mainComponent;
     let personalDataComponent; 
     let medicalInfoComponent;
+
+    let auth = new Authenticator()
+    auth.call();
 
     if (this.state.stage == stages.PERSONAL_DATA) {
       mainComponent = 
