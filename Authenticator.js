@@ -13,6 +13,7 @@ export default class Authenticator {
   call() {
     let bearer = this.API_KEY + ":" + this.computedHashString
     let request = new XMLHttpRequest();
+    var that = this 
     request.onreadystatechange = (e) => {
       if (request.readyState !== 4) {
         return;
@@ -20,7 +21,9 @@ export default class Authenticator {
 
       if (request.status === 200) {
         const result = request.responseText;
-        console.log(result)
+        const parsedResult = JSON.parse(result)
+        console.log("THAT" + that.constructor)
+        that.authToken = parsedResult["Token"]
       } else {
         console.log('error');
       }
@@ -30,4 +33,8 @@ export default class Authenticator {
     request.send()
   }
 
+  get token() {
+    console.log("IN GET" + this.authToken)
+    return this.authToken
+  }
 }

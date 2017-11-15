@@ -1,34 +1,39 @@
 import { store, actionTypes, stages, noneOption } from './unjaniRedux'
 import moment from 'moment'
+import Authenticator from './Authenticator'
 
 export default class Requester {
   BASE_URL = "https://sandbox-healthservice.priaid.ch/"
-  DEFAULT_QUERY_PARAMS = "?language=en-gb&format=json&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNocmlzdGluYS52LnN0ZXdhcnRAZ21haWwuY29tIiwicm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zaWQiOiIxNTUyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDE3LTA0LTI1IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE1MDY2NzQ0MDYsIm5iZiI6MTUwNjY2NzIwNn0.qLCHEXNxQQa40ulRnuSFqMI8mHfqO9LZyxH-wqbpPy0"
 
   constructor(gender, birthYear) {
     this.gender = gender;
-    this.birthYear = birthYear;  
+    this.birthYear = birthYear; 
+    const authenticator = new Authenticator()
+    authenticator.call()
+    this.token = authenticator.token 
+  }
+
+  defaultQueryParams() {
+    return "?language=en-gb&format=json&token=" + this.token
   }
 
   get() {
     const {stage, medicalInfo} = store.getState();
-    console.log("IN GET" + stage)
-    console.log(medicalInfo)
 
     const fullURL = () => {
       switch (stage) {
         case stages.BODY_LOCATION: {
           const locationID = this.getLocationID(stages.BODY_LOCATION, medicalInfo)
-          return this.BASE_URL + "body/locations/" + locationID + this.DEFAULT_QUERY_PARAMS
+          return this.BASE_URL + "body/locations/" + locationID + this.defaultQueryParams()
         }
         case stages.BODY_SUBLOCATION: {
           const locationID = this.getLocationID(stages.BODY_SUBLOCATION, medicalInfo)
           const selectorStatus = this.getSelectorStatus()
-          return this.BASE_URL + "symptoms/" + locationID + "/" + selectorStatus + this.DEFAULT_QUERY_PARAMS
+          return this.BASE_URL + "symptoms/" + locationID + "/" + selectorStatus + this.defaultQueryParams()
          }
         case stages.SUBLOCATION_SYMPTOMS: {
           const locationIDs = this.getLocationIDs(stages.SUBLOCATION_SYMPTOMS, medicalInfo)
-          return this.BASE_URL + "symptoms/proposed" + this.DEFAULT_QUERY_PARAMS + "&symptoms=" + JSON.stringify(locationIDs) + "&gender=" + this.gender + "&year_of_birth=" + this.birthYear 
+          return this.BASE_URL + "symptoms/proposed" + this.defaultQueryParams() + "&symptoms=" + JSON.stringify(locationIDs) + "&gender=" + this.gender + "&year_of_birth=" + this.birthYear 
         }
         case stages.ADDITIONAL_SYMPTOMS: {
           const symptomLocationIDs = this.getLocationIDs(stages.SUBLOCATION_SYMPTOMS, medicalInfo)
@@ -38,7 +43,7 @@ export default class Requester {
             locationIDs.splice(noneOptionIndex,1)
           }
           const allLocationIDs = symptomLocationIDs.concat(locationIDs)
-          return this.BASE_URL + "diagnosis" + this.DEFAULT_QUERY_PARAMS + "&symptoms=" + JSON.stringify(allLocationIDs) + "&gender=" + this.gender + "&year_of_birth=" + this.birthYear
+          return this.BASE_URL + "diagnosis" + this.defaultQueryParams() + "&symptoms=" + JSON.stringify(allLocationIDs) + "&gender=" + this.gender + "&year_of_birth=" + this.birthYear
         }
       }
     }
@@ -80,7 +85,8 @@ export default class Requester {
         const result = request.responseText;
         store.dispatch({type: actionTypes.REQUEST_COMPLETED, payload: {potential: eval(result)}}) 
       } else {
-        console.log('error');
+        console.log(request.status);
+        console.log(request.responseText());
       }
     }
 
