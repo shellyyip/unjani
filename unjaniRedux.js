@@ -53,7 +53,8 @@ export const actionTypes = {
   PERSONAL_DATA_CHANGE: 'PERSONAL_DATA_CHANGE',
   OPTIONS_SUBMITTED: 'OPTIONS_SUBMITTED',
   REQUEST_COMPLETED: 'REQUEST_COMPLETED',
-  PREVIOUS_STAGE_SELECTED: 'PREVIOUS_STAGE_SELECTED'
+  PREVIOUS_STAGE_SELECTED: 'PREVIOUS_STAGE_SELECTED',
+  AUTH_TOKEN_RECEIVED: 'AUTH_TOKEN_RECEIVED'
 }
 
 export const stages = {
@@ -72,12 +73,19 @@ const initialState = {
   birthYear: undefined,
   isFetching: false,
   stage: stages.PERSONAL_DATA,
-  medicalInfo: DEFAULT_MEDICAL_INFO
+  medicalInfo: DEFAULT_MEDICAL_INFO,
+  authToken: undefined
 }
 
 export const reducer = (state = initialState, action) => {
   const {type, payload} = action
   switch (type) {
+    case actionTypes.AUTH_TOKEN_RECEIVED: {
+      return {
+        ...state,
+        authToken: payload.authToken
+      }
+    }
     case actionTypes.PERSONAL_DATA_CHANGE: {
       return {
         ...state,

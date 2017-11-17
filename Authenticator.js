@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js'
+import { store, actionTypes } from './unjaniRedux'
 
 export default class Authenticator {
   BASE_URL = "https://sandbox-authservice.priaid.ch/login"
@@ -13,7 +14,6 @@ export default class Authenticator {
   call() {
     let bearer = this.API_KEY + ":" + this.computedHashString
     let request = new XMLHttpRequest();
-    var that = this 
     request.onreadystatechange = (e) => {
       if (request.readyState !== 4) {
         return;
@@ -22,19 +22,13 @@ export default class Authenticator {
       if (request.status === 200) {
         const result = request.responseText;
         const parsedResult = JSON.parse(result)
-        console.log("THAT" + that.constructor)
-        that.authToken = parsedResult["Token"]
+        store.dispatch({type: actionTypes.AUTH_TOKEN_RECEIVED, payload: {authToken: parsedResult["Token"]}}) 
       } else {
-        console.log('error');
+        console.log('auth error');
       }
     }
     request.open('POST', this.BASE_URL)
     request.setRequestHeader('Authorization', 'Bearer ' + bearer);
     request.send()
-  }
-
-  get token() {
-    console.log("IN GET" + this.authToken)
-    return this.authToken
   }
 }

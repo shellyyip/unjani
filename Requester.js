@@ -5,12 +5,10 @@ import Authenticator from './Authenticator'
 export default class Requester {
   BASE_URL = "https://sandbox-healthservice.priaid.ch/"
 
-  constructor(gender, birthYear) {
+  constructor(gender, birthYear, token) {
     this.gender = gender;
     this.birthYear = birthYear; 
-    const authenticator = new Authenticator()
-    authenticator.call()
-    this.token = authenticator.token 
+    this.token = token;
   }
 
   defaultQueryParams() {

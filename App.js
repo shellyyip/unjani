@@ -59,7 +59,8 @@ export default class App extends React.Component {
 
   onSelectOptions = (selectedIDs) => {
     store.dispatch({type: actionTypes.OPTIONS_SUBMITTED, payload: {selected: selectedIDs}})
-    let requester = new Requester(this.state.gender, this.state.birthYear) 
+    // make this the same requester throughout the code. no need to reinstantiate
+    let requester = new Requester(this.state.gender, this.state.birthYear, this.state.authToken) 
     requester.get()
   }
 
