@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+
+import { StyleSheet, Text, View, ActivityIndicator, Image } from 'react-native';
 
 import { store, actionTypes, stages, stagesKeys, prompts } from './unjaniRedux'
 
@@ -10,12 +11,29 @@ import CheckboxForm from './CheckboxForm'
 import List from './List'
 import Breadcrumbs from './Breadcrumbs'
 
+import { Font } from 'expo';
+
 export default class App extends React.Component {
-  state = {}  
+  state = {fontsAreLoaded: false}  
 
-  componentWillMount() {
-    this.setState(store.getState())
+  async componentWillMount() {
+    //handle promise rejection
+    await Font.loadAsync({
+      'Rubik-Black': require('./node_modules/@shoutem/ui/fonts/Rubik-Black.ttf'),
+      'Rubik-BlackItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BlackItalic.ttf'),
+      'Rubik-Bold': require('./node_modules/@shoutem/ui/fonts/Rubik-Bold.ttf'),
+      'Rubik-BoldItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BoldItalic.ttf'),
+      'Rubik-Italic': require('./node_modules/@shoutem/ui/fonts/Rubik-Italic.ttf'),
+      'Rubik-Light': require('./node_modules/@shoutem/ui/fonts/Rubik-Light.ttf'),
+      'Rubik-LightItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-LightItalic.ttf'),
+      'Rubik-Medium': require('./node_modules/@shoutem/ui/fonts/Rubik-Medium.ttf'),
+      'Rubik-MediumItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf'),
+      'Rubik-Regular': require('./node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
+      'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
+    });
 
+    this.setState({...store.getState(), fontsAreLoaded: true});
+  
     this.unsubscribe = store.subscribe(() => {
       this.setState(store.getState())
     })
@@ -65,45 +83,69 @@ export default class App extends React.Component {
   }
 
   render() {
-    let mainComponent;
+    let mainComponent = <ActivityIndicator animating={true} />;
     let personalDataComponent; 
     let medicalInfoComponent;
+    let navComponent;
+    let containerComponent;
 
-    let auth = new Authenticator()
-    auth.call();
+    if (!this.state.authToken) {
+      let auth = new Authenticator()
+      auth.call();
+    }
 
-    if (this.state.stage == stages.PERSONAL_DATA) {
-      mainComponent = 
-        <PersonalDataForm
-          onFormSubmit={this.onPersonalDataChange}
-        />
-    } else if (this.state.isFetching) {
-      mainComponent = <ActivityIndicator animating={true} />
+    if (this.state.fontsAreLoaded) {
+      navComponent = <Text style={styles.title}> UNJANI </Text>
+      if (!this.state.isFetching) {
+        if (this.state.stage == stages.PERSONAL_DATA) {
+          mainComponent = 
+            <PersonalDataForm
+              onFormSubmit={this.onPersonalDataChange}
+            />
+        } else if (this.state.isFetching) {
+          mainComponent = <ActivityIndicator animating={true} />
+        } else {
+          personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
+          medicalInfoComponent = <Breadcrumbs itemObjs={this.getExistingMedicalInfo()} onItemSelection={this.onBreadcrumbSelection} />
+          if (this.state.stage == stages.DIAGNOSES) {
+            mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
+          }
+          else {
+            mainComponent = <CheckboxForm onFormSubmit={this.onSelectOptions} validateOneOption={this.checkValidateOneOption()}  prompt={this.getPrompt()} allOptions={this.getCheckboxFormOptions()} />;
+          }
+        }
+      }
+      containerComponent = (
+        <View style={styles.container}>
+         {navComponent}
+         <Image style={styles.image} source={require('./img/doctor.jpg')} />
+          {personalDataComponent}
+         {medicalInfoComponent}
+         {mainComponent}
+        </View>
+      )
     } else {
-      personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
-      medicalInfoComponent = <Breadcrumbs itemObjs={this.getExistingMedicalInfo()} onItemSelection={this.onBreadcrumbSelection} />
-      if (this.state.stage == stages.DIAGNOSES) {
-        mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
-      }
-      else {
-         mainComponent = <CheckboxForm onFormSubmit={this.onSelectOptions} validateOneOption={this.checkValidateOneOption()}  prompt={this.getPrompt()} allOptions={this.getCheckboxFormOptions()} />;
-      }
-    }    
+      containerComponent = <ActivityIndicator animating={true} />; 
+    }   
 
-    return (    
-      <View style={styles.container}>
-        <Text style={styles.title}>Unjani</Text>
-        {personalDataComponent} 
-        {medicalInfoComponent}
-        {mainComponent}
+    return (
+      <View  style={styles.container}>    
+        {containerComponent}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  image: {
+    resizeMode: 'cover',
+    width: 400
+  },
   title: {
-    padding: 20,
+    backgroundColor: '#1e90ff',
+    fontWeight: 'bold',
+    color: 'white',
+    padding: 15,
     textAlign: 'center'
   },
   container: {
