@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { StyleSheet, Text, View, ActivityIndicator, Image } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, ActivityIndicator, Image } from 'react-native';
 
 import { store, actionTypes, stages, stagesKeys, prompts } from './unjaniRedux'
 
@@ -12,9 +12,10 @@ import List from './List'
 import Breadcrumbs from './Breadcrumbs'
 
 import { Font } from 'expo';
+import Modal from 'react-native-modal'
 
 export default class App extends React.Component {
-  state = {fontsAreLoaded: false}  
+  state = {fontsAreLoaded: false, isModalVisible: false}  
 
   async componentWillMount() {
     //handle promise rejection
@@ -82,6 +83,10 @@ export default class App extends React.Component {
     requester.get()
   }
 
+  _showModal = () => this.setState({ isModalVisible: true })
+
+  _hideModal = () => this.setState({ isModalVisible: false })
+
   render() {
     let mainComponent = <ActivityIndicator animating={true} />;
     let personalDataComponent; 
@@ -118,6 +123,14 @@ export default class App extends React.Component {
       containerComponent = (
         <View style={styles.container}>
          {navComponent}
+          <TouchableOpacity onPress={this._showModal}>
+            <Text>Show Modal</Text>
+          </TouchableOpacity>
+          <Modal isVisible={this.state.isModalVisible}>
+            <View style={{ flex: 1 }}>
+              <Text>Hello!</Text>
+            </View>
+          </Modal>
          <Image style={styles.image} source={require('./img/doctor.jpg')} />
           {personalDataComponent}
          {medicalInfoComponent}
@@ -145,7 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1e90ff',
     fontWeight: 'bold',
     color: 'white',
-    padding: 15,
+    padding: 30,
     textAlign: 'center'
   },
   container: {
