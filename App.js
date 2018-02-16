@@ -12,25 +12,14 @@ import List from './List'
 import Breadcrumbs from './Breadcrumbs'
 
 import { Font } from 'expo';
-import Modal from 'react-native-modal'
 
 export default class App extends React.Component {
-  state = {fontsAreLoaded: false, isModalVisible: false}  
+  state = {fontsAreLoaded: false}  
 
   async componentWillMount() {
-    //handle promise rejection
     await Font.loadAsync({
-      'Rubik-Black': require('./node_modules/@shoutem/ui/fonts/Rubik-Black.ttf'),
-      'Rubik-BlackItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BlackItalic.ttf'),
-      'Rubik-Bold': require('./node_modules/@shoutem/ui/fonts/Rubik-Bold.ttf'),
-      'Rubik-BoldItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BoldItalic.ttf'),
-      'Rubik-Italic': require('./node_modules/@shoutem/ui/fonts/Rubik-Italic.ttf'),
-      'Rubik-Light': require('./node_modules/@shoutem/ui/fonts/Rubik-Light.ttf'),
-      'Rubik-LightItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-LightItalic.ttf'),
-      'Rubik-Medium': require('./node_modules/@shoutem/ui/fonts/Rubik-Medium.ttf'),
-      'Rubik-MediumItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf'),
-      'Rubik-Regular': require('./node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
-      'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
+      'open-sans-regular': require('./assets/fonts/OpenSans-Regular.ttf'),
+      'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
     });
 
     this.setState({...store.getState(), fontsAreLoaded: true});
@@ -83,12 +72,8 @@ export default class App extends React.Component {
     requester.get()
   }
 
-  _showModal = () => this.setState({ isModalVisible: true })
-
-  _hideModal = () => this.setState({ isModalVisible: false })
-
   render() {
-    let mainComponent = <ActivityIndicator animating={true} />;
+    let mainComponent = <ActivityIndicator size="large" color="#ffffff"  animating={true} />;
     let personalDataComponent; 
     let medicalInfoComponent;
     let navComponent;
@@ -108,9 +93,9 @@ export default class App extends React.Component {
               onFormSubmit={this.onPersonalDataChange}
             />
         } else if (this.state.isFetching) {
-          mainComponent = <ActivityIndicator animating={true} />
+          mainComponent = <ActivityIndicator size="large" color="#ffffff" animating={true} />
         } else {
-          personalDataComponent = <Text> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
+          personalDataComponent = <Text style={styles.enteredPersonalData}> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
           medicalInfoComponent = <Breadcrumbs itemObjs={this.getExistingMedicalInfo()} onItemSelection={this.onBreadcrumbSelection} />
           if (this.state.stage == stages.DIAGNOSES) {
             mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
@@ -122,27 +107,21 @@ export default class App extends React.Component {
       }
       containerComponent = (
         <View style={styles.container}>
-         {navComponent}
-          <TouchableOpacity onPress={this._showModal}>
-            <Text>Show Modal</Text>
-          </TouchableOpacity>
-          <Modal isVisible={this.state.isModalVisible}>
-            <View style={{ flex: 1 }}>
-              <Text>Hello!</Text>
-            </View>
-          </Modal>
-         <Image style={styles.image} source={require('./img/doctor.jpg')} />
+          {navComponent}
+          <Image style={styles.image} source={require('./img/doctor.jpg')} />
           {personalDataComponent}
-         {medicalInfoComponent}
-         {mainComponent}
+          {medicalInfoComponent}
+          {mainComponent}
         </View>
       )
     } else {
-      containerComponent = <ActivityIndicator animating={true} />; 
+      containerComponent =  (
+        <ActivityIndicator size="large" color="#ffffff" animating={true} /> 
+      ) 
     }   
 
     return (
-      <View  style={styles.container}>    
+      <View style={styles.container}>
         {containerComponent}
       </View>
     );
@@ -155,14 +134,18 @@ const styles = StyleSheet.create({
     width: 400
   },
   title: {
-    backgroundColor: '#1e90ff',
     fontWeight: 'bold',
     color: 'white',
-    padding: 30,
-    textAlign: 'center'
+    padding: 20,
+    paddingTop: 50,
+    textAlign: 'center',
+    fontFamily: 'open-sans-bold'
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#1e90ff'
   },
+  enteredPersonalData: {
+    fontFamily: 'open-sans-bold' 
+  }
 });

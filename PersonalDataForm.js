@@ -1,74 +1,89 @@
 import React from 'react'
-import { Form, Section, ButtonCell, ActionSheetCell, TextInputCell, createValidator } from 'react-native-forms';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { birthYearValidator } from './validators';
-import FormErrors from './FormErrors'
-import { View } from 'react-native';
+import t from 'tcomb-form-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
-export default class PersonalDataForm extends React.Component {
-  state = {
-    errors: []
-  }
+let Gender = t.enums.of([
+  'male',
+  'female'
+]);
 
-  onFormSubmit = (ref) => {
-    let errorsArray = Object.values(this.form.getValidationErrors().personalDataSection) 
-    if (errorsArray.length == 0) {
-      if (ref === 'submitButton') {
-        let section = this.form.getData().personalDataSection
-        let gender = section.genderInput
-        let birthYear = section.birthYearInput
-        const {onFormSubmit} = this.props
-        onFormSubmit(gender, birthYear) 
-      }
-    } else {
-      this.setState({errors: errorsArray})
+const startingBirthYear = 1920
+
+let birthYears = t.enums.of(
+  Array.from(new Array(100), (v,i) => (i + startingBirthYear).toString() )
+)
+
+const personalData = t.struct({
+  birthYear: birthYears,
+  gender: Gender
+});
+
+const defaultPersonalData = {
+  birthYear: '1990',
+  gender: 'female'
+}
+
+const Form = t.form.Form;
+
+Form.stylesheet.controlLabel.normal.fontFamily = 'open-sans-regular';
+Form.stylesheet.controlLabel.normal.color = '#ffffff';
+Form.stylesheet.pickerContainer.normal.backgroundColor = '#ffffff';
+Form.stylesheet.select.normal.backgroundColor = '#ffffff';
+
+var options = {
+  fields: {
+    birthYear: {
+      label: 'Birth Year'
     }
   }
+};
 
-  renderBirthYearInput = () => {
-    return (
-      <TextInputCell
-        ref="birthYearInput"
-        inputProps={{ placeholder: 'Birth Year' }}
-        validator={createValidator(birthYearValidator, { errorMessage: 'Invalid Birth Year' })}
-      />
-    )
-  }
-
-  renderGenderInput = () => {
-    const alertIcon = <Icon name="ios-alert" ios="ios-alert" md="md-alert" color={'gray'} size={20} />;
-    return (
-      <ActionSheetCell
-        ref={'genderInput'}
-        title={'Gender'}
-        options={['male', 'female']}
-        icon={alertIcon}
-        selectedValueIndex={0}
-      />
-    )
+export default class PersonalDataForm extends React.Component {
+  onFormSubmit = () => {
+    const value = this._form.getValue(); 
+    const {onFormSubmit} = this.props 
+    onFormSubmit(value.gender, value.birthYear) 
   }
 
   render () {
     return (
-        <Form
-          ref={(ref) => { this.form = ref; }}
-          onPress={this.onFormSubmit.bind(this)}
-        >
-          <FormErrors errorsArray={this.state.errors} />
-          <Section
-            ref={'personalDataSection'}
-          >
-            {this.renderBirthYearInput()}
-            {this.renderGenderInput()}
-            
-            <ButtonCell
-              ref={'submitButton'}
-              title={'Submit'}
-              textAlign={'center'}
-              titleColor={'blue'}
-            />
-          </Section>
-        </Form>
+      <View style={styles.container}>
+        <Text style={styles.prompt}>TELL US ABOUT YOURSELF  </Text>
+        <Form type={personalData} options={options} value={defaultPersonalData} ref={c => this._form = c} />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={this.onFormSubmit}>
+          <Text style={styles.buttonText}>SUBMIT</Text>
+        </TouchableOpacity>
+      </View>
      )
   }
 }
+
+const styles = StyleSheet.create({
+  prompt: {
+    fontFamily: 'open-sans-bold',
+    paddingBottom: 10,
+    color: '#ffffff',
+    fontSize: 20
+  },
+  container: {
+    padding: 20
+  },
+  buttonText: {
+    alignSelf: 'center',
+    fontFamily: 'open-sans-bold'
+  },
+  button: { 
+    marginTop: 12, 
+    height: 40,
+    backgroundColor: '#ffffff',
+    borderColor: '#ffffff',
+    borderRadius: 4,
+    alignSelf: 'center',
+    width: 80,
+    borderWidth: .5,
+    justifyContent: 'center'
+  }
+})
+
