@@ -1,6 +1,7 @@
 import React from 'react'
 import t from 'tcomb-form-native';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import styles from './FormStyles'
 
 let Gender = t.enums.of([
   'male',
@@ -33,7 +34,11 @@ Form.stylesheet.select.normal.backgroundColor = '#ffffff';
 var options = {
   fields: {
     birthYear: {
+      nullOption: false,
       label: 'Birth Year'
+    },
+    gender: {
+      nullOption: false
     }
   }
 };
@@ -60,30 +65,4 @@ export default class PersonalDataForm extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  prompt: {
-    fontFamily: 'open-sans-bold',
-    paddingBottom: 10,
-    color: '#ffffff',
-    fontSize: 20
-  },
-  container: {
-    padding: 20
-  },
-  buttonText: {
-    alignSelf: 'center',
-    fontFamily: 'open-sans-bold'
-  },
-  button: { 
-    marginTop: 12, 
-    height: 40,
-    backgroundColor: '#ffffff',
-    borderColor: '#ffffff',
-    borderRadius: 4,
-    alignSelf: 'center',
-    width: 80,
-    borderWidth: .5,
-    justifyContent: 'center'
-  }
-})
 

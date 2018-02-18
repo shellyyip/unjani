@@ -74,7 +74,6 @@ export default class App extends React.Component {
 
   render() {
     let mainComponent = <ActivityIndicator size="large" color="#ffffff"  animating={true} />;
-    let personalDataComponent; 
     let medicalInfoComponent;
     let navComponent;
     let containerComponent;
@@ -95,7 +94,6 @@ export default class App extends React.Component {
         } else if (this.state.isFetching) {
           mainComponent = <ActivityIndicator size="large" color="#ffffff" animating={true} />
         } else {
-          personalDataComponent = <Text style={styles.enteredPersonalData}> Gender: {this.state.gender} Birth Year: {this.state.birthYear} </Text>
           medicalInfoComponent = <Breadcrumbs itemObjs={this.getExistingMedicalInfo()} onItemSelection={this.onBreadcrumbSelection} />
           if (this.state.stage == stages.DIAGNOSES) {
             mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
@@ -109,7 +107,6 @@ export default class App extends React.Component {
         <View style={styles.container}>
           {navComponent}
           <Image style={styles.image} source={require('./img/doctor.jpg')} />
-          {personalDataComponent}
           {medicalInfoComponent}
           {mainComponent}
         </View>
