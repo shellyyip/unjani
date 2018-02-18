@@ -41,6 +41,8 @@ export default class App extends React.Component {
 
   getExistingMedicalInfo() {
     const {medicalInfo} = this.state;
+    console.log("MEDICAL INFO FROM STATE")
+    console.log(medicalInfo)
     const orderedKeys = stagesKeys.filter((n) => { return (Object.keys(medicalInfo).includes(n) && medicalInfo[n].selectedNames) })
     return (orderedKeys.map((k) => {return ({identifier: k, item: medicalInfo[k].selectedNames.join(", ")})}))
   }
@@ -94,7 +96,9 @@ export default class App extends React.Component {
         } else if (this.state.isFetching) {
           mainComponent = <ActivityIndicator size="large" color="#ffffff" animating={true} />
         } else {
-          medicalInfoComponent = <Breadcrumbs itemObjs={this.getExistingMedicalInfo()} onItemSelection={this.onBreadcrumbSelection} />
+           console.log("EXISTING MED INFO")
+            console.log(this.getExistingMedicalInfo())
+           medicalInfoComponent = <Breadcrumbs itemObjs={this.getExistingMedicalInfo()} onItemSelection={this.onBreadcrumbSelection} />
           if (this.state.stage == stages.DIAGNOSES) {
             mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />
           }

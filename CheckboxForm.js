@@ -5,20 +5,28 @@ import t from 'tcomb-form-native';
 
 const Form = t.form.Form;
 
+let _ = require('lodash');
+
+const checkboxStylesheet = _.cloneDeep(Form.stylesheet);
+
+checkboxStylesheet.fieldset.marginTop = 10
+checkboxStylesheet.formGroup.normal.flexDirection = 'row' 
+checkboxStylesheet.formGroup.normal.justifyContent = 'space-between'
+
 export default class CheckboxForm extends React.Component {
-  handlePress = () =>  {
+  state = {error: ""}  
+
+  onFormSubmit = () =>  {
     const {allOptions, onFormSubmit, validateOneOption, prompt} = this.props
-    let allIndexes = this.form.getData()[prompt];
-    console.log(Object.keys(this.form.getData()))
-    console.log(Object.values(this.form.getData()))
-    let allIndexKeys = Object.keys(allIndexes);
-    let selectedIndexes = allIndexKeys.filter(key => allIndexes[key] == true);
-    let selected = allOptions.filter((obj, index) => 
-      selectedIndexes.includes(index.toString())
-    );
-    let selectedIDs = selected.map((obj) => obj.ID );
-    console.log("in handle press. selected IDs: " + selectedIDs);
-    (validateOneOption && selectedIDs.length > 1) ? this.setState({errors: ["Please select only one location"]})  : onFormSubmit(selectedIDs);
+    const formData = this._form.getValue();
+    let selectedIDs = Object.keys(formData).filter(key => formData[key] == true);
+    if (selectedIDs.length == 1) {
+      onFormSubmit(selectedIDs);
+    } else if (validateOneOption && selectedIDs.length > 1) {
+      this.setState({error: "Please make only one selection."}) 
+    } else {
+      this.setState({error: "Please make at least one selection."})
+    }
   }
  
   renderSwitchCell = (symptomObj, i) => {
@@ -30,7 +38,7 @@ export default class CheckboxForm extends React.Component {
   render () {
     const {allOptions, prompt} = this.props
     let symptomsByID = {}
-    let customizeOptions = {fields: {}}  
+    let customizeOptions = {stylesheet: checkboxStylesheet, fields: {}}  
     
     allOptions.forEach(obj =>{ 
       symptomsByID[obj.ID] = t.Boolean
@@ -42,6 +50,7 @@ export default class CheckboxForm extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.prompt}>{prompt}</Text>
+        <Text style={localStyles.error}> {this.state.error} </Text>
         <Form type={symptomsForForm} options={customizeOptions}  ref={c => this._form = c} />
         <TouchableOpacity
           style={styles.button}
@@ -50,5 +59,12 @@ export default class CheckboxForm extends React.Component {
         </TouchableOpacity>
       </View>
     )
+  }
+}
+
+const localStyles = {
+  error: {
+    alignSelf: 'center'
+    color: '#ff7043',
   }
 }
