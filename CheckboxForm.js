@@ -21,7 +21,8 @@ export default class CheckboxForm extends React.Component {
     const formData = this._form.getValue();
     let selectedIDs = Object.keys(formData).filter(key => formData[key] == true);
     if (selectedIDs.length == 1) {
-      onFormSubmit(selectedIDs);
+      let formattedIDs = selectedIDs.map(key => parseInt(key))
+      onFormSubmit(formattedIDs);
     } else if (validateOneOption && selectedIDs.length > 1) {
       this.setState({error: "Please make only one selection."}) 
     } else {
@@ -64,7 +65,7 @@ export default class CheckboxForm extends React.Component {
 
 const localStyles = {
   error: {
-    alignSelf: 'center'
+    alignSelf: 'center',
     color: '#ff7043',
   }
 }
