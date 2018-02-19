@@ -75,7 +75,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    let mainComponent = <ActivityIndicator size="large" color="#ffffff"  animating={true} />;
+    let mainComponent = <ActivityIndicator style={styles.activityIndicator} size="large" color="#ffffff"  animating={true} />;
     let medicalInfoComponent;
     let navComponent;
     let containerComponent;
@@ -94,7 +94,7 @@ export default class App extends React.Component {
               onFormSubmit={this.onPersonalDataChange}
             />
         } else if (this.state.isFetching) {
-          mainComponent = <ActivityIndicator size="large" color="#ffffff" animating={true} />
+          mainComponent = <ActivityIndicator style={styles.activityIndicator} size="large" color="#ffffff" animating={true} />
         } else {
            console.log("EXISTING MED INFO")
             console.log(this.getExistingMedicalInfo())
@@ -117,7 +117,7 @@ export default class App extends React.Component {
       )
     } else {
       containerComponent =  (
-        <ActivityIndicator size="large" color="#ffffff" animating={true} /> 
+        <ActivityIndicator style={styles.activityIndicator} size="large" color="#ffffff" animating={true} /> 
       ) 
     }   
 
@@ -130,6 +130,9 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  activityIndicator: {
+    marginTop: 50
+  },
   image: {
     resizeMode: 'cover',
     width: 400

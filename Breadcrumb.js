@@ -10,7 +10,7 @@ export default class Breadcrumb extends React.Component {
   render() {
     return (
       <TouchableOpacity onPress={this.handleSelection}>
-        <Text style={styles.breadcrumb}>{this.props.item}</Text>  
+        <Text style={styles.breadcrumb}>{this.props.item} </Text>  
       </TouchableOpacity>
     )
   }
@@ -19,7 +19,9 @@ export default class Breadcrumb extends React.Component {
 const styles = {
   breadcrumb: {
     fontFamily: 'open-sans-bold',
-    color: '#000000',
-    fontSize: 14
+    color: '#AED6F1',
+    textDecorationLine: 'underline',
+    fontSize: 14,
+    justifyContent: 'center'
   }
 }

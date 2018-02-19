@@ -20,13 +20,13 @@ export default class CheckboxForm extends React.Component {
     const {allOptions, onFormSubmit, validateOneOption, prompt} = this.props
     const formData = this._form.getValue();
     let selectedIDs = Object.keys(formData).filter(key => formData[key] == true);
-    if (selectedIDs.length == 1) {
+    if (validateOneOption && selectedIDs.length > 1) {
+      this.setState({error: "Please make only one selection."}) 
+    } else if (selectedIDs.length < 1) {
+      this.setState({error: "Please make at least one selection."})
+    } else {
       let formattedIDs = selectedIDs.map(key => parseInt(key))
       onFormSubmit(formattedIDs);
-    } else if (validateOneOption && selectedIDs.length > 1) {
-      this.setState({error: "Please make only one selection."}) 
-    } else {
-      this.setState({error: "Please make at least one selection."})
     }
   }
  

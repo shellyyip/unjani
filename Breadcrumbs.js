@@ -8,10 +8,10 @@ export default class Breadcrumbs extends React.Component {
     const {onItemSelection} = this.props
     let icon; 
     if (index > 0) {
-      icon = <Icon name="ios-arrow-round-forward" ios="ios-arrow-round-forward" md="md-arrow-round-forward" />;
+      icon = <Icon style={styles.icon} name="ios-arrow-forward" ios="ios-arrow-forward" md="md-arrow-forward" />;
     }
     return (
-      <View style={styles.breadcrumbs}  key={index}>
+      <View style={styles.breadcrumbGroup} key={index}>
         {icon}
         <Breadcrumb onSelection={onItemSelection} item={itemObj.item} identifier={itemObj.identifier} /> 
       </View>
@@ -22,7 +22,7 @@ export default class Breadcrumbs extends React.Component {
     const {itemObjs} = this.props
  
     return (
-      <View>
+      <View style={styles.breadcrumbs} >
         {itemObjs.map(this.renderItem)}
       </View>
     )
@@ -30,10 +30,22 @@ export default class Breadcrumbs extends React.Component {
 }
 
 const styles = {
+  breadcrumbGroup: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexShrink: 2
+  },
+  icon: {
+    marginRight: 10,
+    color: '#AED6F1'
+  },
   breadcrumbs : {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    paddingLeft: 10,
+    marginTop: 10
   }
 
 }
