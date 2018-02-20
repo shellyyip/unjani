@@ -1,5 +1,6 @@
 import React from 'react'
 import { FlatList, Text, StyleSheet, View } from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class List extends React.Component {
   state = { formattedItems: [] }  
@@ -22,10 +23,10 @@ export default class List extends React.Component {
 
   render() {
     return (
-      <View>
-        <Text> {this.props.prompt} </Text>
+      <View style={styles.container}>
+        <Icon style={styles.icon} name="ios-medkit" ios="ios-medkit" md="md-medkit" />
+        <Text style={styles.prompt}> {this.props.prompt} </Text>
         <FlatList
-          style={styles.container}
           data={this.state.formattedItems}
           renderItem={this.renderItem}
           keyExtractor={this.extractKey}
@@ -39,6 +40,27 @@ const styles = StyleSheet.create({
   row: {
     padding: 5,
     marginBottom: 2,
-    backgroundColor: 'peru',
+    fontFamily: 'open-sans-bold',
+    color: '#ffffff'
   },
+  prompt: {
+    fontSize: 15,
+    fontFamily: 'open-sans-bold',
+    color: '#1e90ff',
+    textAlign: 'center',
+    margin: 15
+   },
+  container: {
+    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor: '#000000',
+    padding: 10,
+    borderRadius: 2
+  },
+  icon: {
+    color: 'white',
+    alignSelf: 'center',
+    marginTop: 10,
+    fontSize: 30,
+  }
 })

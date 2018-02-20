@@ -46,7 +46,7 @@ export const prompts = {
   BODY_SUBLOCATION: 'Specifially, which of these body parts hurts?',
   SUBLOCATION_SYMPTOMS: 'Which of these symptoms are you having?',
   ADDITIONAL_SYMPTOMS: 'Are you having any additional symptoms?',
-  DIAGNOSES: 'Here are your potential diagnoses, in order of most likely to least likely:'
+  DIAGNOSES: 'POTENTIAL DIAGNOSES'
 }
 
 export const actionTypes = {
