@@ -33,19 +33,19 @@ const styles = {
   breadcrumbGroup: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
-    flexShrink: 2
+    alignItems: 'center'
   },
   icon: {
-    marginRight: 10,
+    marginRight: 5,
     color: '#AED6F1'
   },
   breadcrumbs : {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
-    paddingLeft: 10,
-    marginTop: 10
+    margin: 10,
+    flexWrap: 'wrap',
+    alignContent: 'space-between'
   }
 
 }
