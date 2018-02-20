@@ -29,7 +29,7 @@ const POTENTIAL_BODY_LOCATIONS =
   ]
 
 export const noneOption = {
-  "ID": 'noneOptionID',
+  "ID": -1,
   "Name": "None"
 }
 

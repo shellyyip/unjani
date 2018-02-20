@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, StyleSheet, View, Text } from 'react-native'
+import { TouchableOpacity, ScrollView, StyleSheet, View, Text } from 'react-native'
 import styles from './FormStyles'
 import t from 'tcomb-form-native';
 
@@ -49,7 +49,7 @@ export default class CheckboxForm extends React.Component {
     let symptomsForForm = t.struct(symptomsByID)  
 
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.prompt}>{prompt}</Text>
         <Text style={localStyles.error}> {this.state.error} </Text>
         <Form type={symptomsForForm} options={customizeOptions}  ref={c => this._form = c} />
@@ -58,7 +58,7 @@ export default class CheckboxForm extends React.Component {
           onPress={this.onFormSubmit}>
           <Text style={styles.buttonText}>SUBMIT</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     )
   }
 }

@@ -38,7 +38,7 @@ export default class Requester {
           const locationIDs = this.getLocationIDs(stages.ADDITIONAL_SYMPTOMS, medicalInfo)
           const noneOptionIndex = locationIDs.indexOf(noneOption.ID)
           if (noneOptionIndex > -1) {
-            locationIDs.splice(noneOptionIndex,1)
+            locationIDs.splice(noneOptionIndex)
           }
           const allLocationIDs = symptomLocationIDs.concat(locationIDs)
           return this.BASE_URL + "diagnosis" + this.defaultQueryParams() + "&symptoms=" + JSON.stringify(allLocationIDs) + "&gender=" + this.gender + "&year_of_birth=" + this.birthYear
