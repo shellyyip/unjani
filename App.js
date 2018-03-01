@@ -5,7 +5,6 @@ import { TouchableOpacity, StyleSheet, Text, View, ActivityIndicator, Image } fr
 import { store, actionTypes, stages, stagesKeys, prompts } from './unjaniRedux'
 
 import Requester from './Requester'
-import Authenticator from './Authenticator'
 import PersonalDataForm from './PersonalDataForm'
 import CheckboxForm from './CheckboxForm'
 import List from './List'
@@ -41,8 +40,6 @@ export default class App extends React.Component {
 
   getExistingMedicalInfo() {
     const {medicalInfo} = this.state;
-    console.log("MEDICAL INFO FROM STATE")
-    console.log(medicalInfo)
     const orderedKeys = stagesKeys.filter((n) => { return (Object.keys(medicalInfo).includes(n) && medicalInfo[n].selectedNames) })
     return (orderedKeys.map((k) => {return ({identifier: k, item: medicalInfo[k].selectedNames.join(", ")})}))
   }
@@ -70,7 +67,7 @@ export default class App extends React.Component {
   onSelectOptions = (selectedIDs) => {
     store.dispatch({type: actionTypes.OPTIONS_SUBMITTED, payload: {selected: selectedIDs}})
     // make this the same requester throughout the code. no need to reinstantiate
-    let requester = new Requester(this.state.gender, this.state.birthYear, this.state.authToken) 
+    let requester = new Requester(this.state.gender, this.state.birthYear) 
     requester.get()
   }
 
@@ -79,11 +76,6 @@ export default class App extends React.Component {
     let medicalInfoComponent;
     let navComponent;
     let containerComponent;
-
-    if (!this.state.authToken) {
-      let auth = new Authenticator()
-      auth.call();
-    }
 
     if (this.state.fontsAreLoaded) {
       navComponent = <Text style={styles.title}> UNJANI </Text>
@@ -96,8 +88,6 @@ export default class App extends React.Component {
         } else if (this.state.isFetching) {
           mainComponent = <ActivityIndicator style={styles.activityIndicator} size="large" color="#ffffff" animating={true} />
         } else {
-           console.log("EXISTING MED INFO")
-            console.log(this.getExistingMedicalInfo())
            medicalInfoComponent = <Breadcrumbs itemObjs={this.getExistingMedicalInfo()} onItemSelection={this.onBreadcrumbSelection} />
           if (this.state.stage == stages.DIAGNOSES) {
             mainComponent = <List prompt={this.getPrompt()} items={this.getCheckboxFormOptions()} />

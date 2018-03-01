@@ -1,18 +1,12 @@
 import { store, actionTypes, stages, noneOption } from './unjaniRedux'
 import moment from 'moment'
-import Authenticator from './Authenticator'
 
 export default class Requester {
-  BASE_URL = "https://sandbox-healthservice.priaid.ch/"
+  BASE_URL = "ec2-54-197-198-23.compute-1.amazonaws.com/"
 
-  constructor(gender, birthYear, token) {
+  constructor(gender, birthYear) {
     this.gender = gender;
     this.birthYear = birthYear; 
-    this.token = token;
-  }
-
-  defaultQueryParams() {
-    return "?language=en-gb&format=json&token=" + this.token
   }
 
   get() {
@@ -22,16 +16,16 @@ export default class Requester {
       switch (stage) {
         case stages.BODY_LOCATION: {
           const locationID = this.getLocationID(stages.BODY_LOCATION, medicalInfo)
-          return this.BASE_URL + "body/locations/" + locationID + this.defaultQueryParams()
+          return this.BASE_URL + "sublocations?locationID=" + locationID 
         }
         case stages.BODY_SUBLOCATION: {
           const locationID = this.getLocationID(stages.BODY_SUBLOCATION, medicalInfo)
-          const selectorStatus = this.getSelectorStatus()
-          return this.BASE_URL + "symptoms/" + locationID + "/" + selectorStatus + this.defaultQueryParams()
+          const mwbg = this.getMwbg()
+          return this.BASE_URL + "sublocation_symptoms?locationID=" + locationID + "&mwbg=" + mwbg 
          }
         case stages.SUBLOCATION_SYMPTOMS: {
           const locationIDs = this.getLocationIDs(stages.SUBLOCATION_SYMPTOMS, medicalInfo)
-          return this.BASE_URL + "symptoms/proposed" + this.defaultQueryParams() + "&symptoms=" + JSON.stringify(locationIDs) + "&gender=" + this.gender + "&year_of_birth=" + this.birthYear 
+          return this.BASE_URL + "additional_symptoms?symptoms=" + JSON.stringify(locationIDs) + "&gender=" + this.gender + "&year_of_birth=" + this.birthYear 
         }
         case stages.ADDITIONAL_SYMPTOMS: {
           const symptomLocationIDs = this.getLocationIDs(stages.SUBLOCATION_SYMPTOMS, medicalInfo)
@@ -41,7 +35,7 @@ export default class Requester {
             locationIDs.splice(noneOptionIndex)
           }
           const allLocationIDs = symptomLocationIDs.concat(locationIDs)
-          return this.BASE_URL + "diagnosis" + this.defaultQueryParams() + "&symptoms=" + JSON.stringify(allLocationIDs) + "&gender=" + this.gender + "&year_of_birth=" + this.birthYear
+          return this.BASE_URL + "diagnosis?symptoms=" + JSON.stringify(allLocationIDs) + "&gender=" + this.gender + "&year_of_birth=" + this.birthYear
         }
       }
     }
@@ -57,7 +51,7 @@ export default class Requester {
     return medicalInfo[stage].selected
   }
 
-  getSelectorStatus() {
+  getMwbg() {
     let thisYear = moment().year();
     let elevenYearsAgo = thisYear - 11;
     let isOverEleven = (this.birthYear < elevenYearsAgo)
