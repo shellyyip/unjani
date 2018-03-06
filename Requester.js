@@ -2,8 +2,7 @@ import { store, actionTypes, stages, noneOption } from './unjaniRedux'
 import moment from 'moment'
 
 export default class Requester {
-  BASE_URL = "http://ec2-35-171-8-151.compute-1.amazonaws.com/"
-  //BASE_URL = "http://localhost:3000/"
+  BASE_URL = "http://ec2-54-204-218-134.compute-1.amazonaws.com/"
 
   constructor(gender, birthYear) {
     this.gender = gender;
