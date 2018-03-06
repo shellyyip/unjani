@@ -2,7 +2,8 @@ import { store, actionTypes, stages, noneOption } from './unjaniRedux'
 import moment from 'moment'
 
 export default class Requester {
-  BASE_URL = "ec2-54-197-198-23.compute-1.amazonaws.com/"
+  BASE_URL = "http://ec2-35-171-8-151.compute-1.amazonaws.com/"
+  //BASE_URL = "http://localhost:3000/"
 
   constructor(gender, birthYear) {
     this.gender = gender;
@@ -74,11 +75,11 @@ export default class Requester {
       }
 
       if (request.status === 200) {
-        const result = request.responseText;
+        const result = request.response;
         store.dispatch({type: actionTypes.REQUEST_COMPLETED, payload: {potential: eval(result)}}) 
       } else {
         console.log(request.status);
-        console.log(request.responseText());
+        console.log(request.response);
       }
     }
 
