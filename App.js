@@ -2,13 +2,13 @@ import React from 'react';
 
 import { TouchableOpacity, StyleSheet, Text, View, ActivityIndicator, Image } from 'react-native';
 
-import { store, actionTypes, stages, stagesKeys, prompts } from './unjaniRedux'
+import { store, actionTypes, stages, stagesKeys, prompts } from './src/reducers/unjaniRedux'
 
-import Requester from './Requester'
-import PersonalDataForm from './PersonalDataForm'
-import CheckboxForm from './CheckboxForm'
-import List from './List'
-import Breadcrumbs from './Breadcrumbs'
+import Requester from './src/services/Requester'
+import PersonalDataForm from './src/components/PersonalDataForm'
+import CheckboxForm from './src/components/CheckboxForm'
+import List from './src/components/List'
+import Breadcrumbs from './src/components/Breadcrumbs'
 
 import { Font } from 'expo';
 
