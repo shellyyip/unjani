@@ -1,7 +1,7 @@
 import React from 'react'
 import t from 'tcomb-form-native';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import styles from './constants/FormStyles'
+import styles from '../constants/FormStyles'
 
 let Gender = t.enums.of([
   'male',

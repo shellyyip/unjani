@@ -1,4 +1,4 @@
-import { store, actionTypes, stages, noneOption } from './reducers/unjaniRedux'
+import { store, actionTypes, stages, noneOption } from '../reducers/unjaniRedux'
 import moment from 'moment'
 
 export default class Requester {

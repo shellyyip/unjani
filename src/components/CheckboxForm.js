@@ -1,6 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, ScrollView, StyleSheet, View, Text } from 'react-native'
-import styles from './constants/FormStyles'
+import styles from '../constants/FormStyles'
 import t from 'tcomb-form-native';
 
 const Form = t.form.Form;

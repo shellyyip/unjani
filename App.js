@@ -100,7 +100,7 @@ export default class App extends React.Component {
       containerComponent = (
         <View style={styles.container}>
           {navComponent}
-          <Image style={styles.image} source={require('./img/doctor.jpg')} />
+          <Image style={styles.image} source={require('./assets/images/doctor.jpg')} />
           {medicalInfoComponent}
           {mainComponent}
         </View>
